@@ -2,7 +2,11 @@ import tweepy
 import configparser
 from textblob import TextBlob
 import time
-from streamlistener import StreamListener
+
+# keywords = ["Kanban", "#kanban", "Scrum", "#scrum"]
+# keywords = ["Kanban", "#kanban"]
+keywords = ["Scrum", "#scrum"]
+languages = ["en", "de"]
 
 config = configparser.ConfigParser()
 config.read('config')
@@ -24,7 +28,19 @@ except tweepy.TweepyException as e:
 except Exception as e:
     print(e)
 
-stream_listener = StreamListener(api)
-stream = tweepy.Stream(api.auth, stream_listener, access_token, access_token_secret)
 
-stream.filter(track=["Kanban", "#Kanban"], languages=["en", "de"])
+class Listener(tweepy.Stream):
+    def on_status(self, tweet):
+
+        if not tweet.truncated:
+            print(f"{tweet.user.screen_name}: {tweet.text}")
+        else:
+            print(f"{tweet.user.screen_name}: {tweet.extended_tweet['full']}")q
+
+        # if len(self.tweets) == self.limit:
+        #     self.disconnect()
+
+
+stream_listener = Listener(api_key, api_key_secret, access_token, access_token_secret)
+
+stream_listener.filter(track=keywords, languages=languages)
