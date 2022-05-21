@@ -5,6 +5,7 @@
 - tweepy  
 - configparser  
 - textblob  
+- pandas
 
 Requirements are listed in `requirements` file and can be easly installed (it is recommended to do this within a virtual environment)
 

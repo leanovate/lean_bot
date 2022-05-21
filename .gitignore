@@ -1,7 +1,13 @@
 # General stuff to ignore
-config
-.idea/
-.env/
-.swp
 .DS_Store
 __pycache__/
+.idea/
+.env/
+*.swp
+*.iml
+
+# Config file with credentials
+config
+
+# Exports
+*.csv
