@@ -1,47 +1,21 @@
-import pandas as pd
 import tweepy
+import pandas as pd
 import os
 
 
-#
-# class Listener(tweepy.Stream):
-#     def __init__(self, api):
-#         self.api = api
-#         self.me = api.verify_credentials()
-#
-#     def on_status(self, tweet):
-#         if tweet.in_reply_to_status_id is not None or tweet.use.id == self.me.id:
-#             return
-#
-#         if not tweet.retweeted:
-#             try:
-#                 # tweet.retweet()
-#                 print(f"{tweet.author.screen_name} - {tweet.text}")
-#                 print(f"Tweet ({tweet.in_reply_to_status_id}) retweeted successfully")
-#             except Exception as e:
-#                 print(e)
-#
-#         if not tweet.favorited:
-#             try:
-#                 # tweet.favorite()
-#                 print(f"Tweet ({tweet.in_reply_to_status_id}) favorited successfully")
-#             except Exception as e:
-#                 print(e)
-#
-#     def on_error(self, status):
-#         print(f"Error while retweeting: {status}")
-
-
 class Listener(tweepy.Stream):
-    # def __init__(self, api):
-    #     self.api = api
-    #     self.me = api.verify_credentials()
 
     tweets = []
-    limit = 10
-    file_path = './export_tweets.csv'
+    limit = 100
+    file_path = './tweets.csv'
 
     def on_status(self, tweet):
+
+        if hasattr(tweet, "retweeted_status"):
+            return
+
+        # TODO check if tweet is own tweet
+
         self.tweets.append(tweet)
         if not tweet.truncated:
             print(f'\n{tweet.user.screen_name}: {tweet.text}')
@@ -71,4 +45,4 @@ class Listener(tweepy.Stream):
             df.to_csv(self.file_path, mode='a', header=False)
         else:
             print('\nNew export file created.')
-            df.to_csv(r'./export_tweets.csv', index=False)
+            df.to_csv(r'./tweets.csv', index=False)
